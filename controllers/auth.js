@@ -2,9 +2,13 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 
+const { validationResult } = require('express-validator/check');
+
 exports.postSignIn = (req,res,next) => {
     const email = req.body.email;
     const pass = req.body.password;
+
+    
 
     User.findOne({email: email})
         .then(user => {
@@ -44,7 +48,14 @@ exports.postSignUp = (req,res,next) => {
     const confPass = req.body.confirmPassword;
     const name = req.body.username;
 
-    //Bad request 400
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.json({
+            status: 422,
+            message: errors.array()[0].msg
+        });
+    }
 
     if (pass !== confPass) {
         return res.json({
