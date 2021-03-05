@@ -5,7 +5,7 @@ var cells = {};
 var walls = {};
 var backup;
 
-var msize;
+var msize; //the length of one side of the square maze
 var rwall, cwtag;
 var nwalls = 0;
 var potentialWalls = [];
@@ -50,6 +50,7 @@ function generate() {
         for (var c = 0; c < msize; c++) {
             if (cells['' + (r*msize+c)].visited == false ) {
                 finish = false;
+                break;
             }
         }
     }
