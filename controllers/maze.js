@@ -5,7 +5,7 @@ var cells = {};
 var walls = {};
 var backup;
 
-var msize; //the length of one side of the square maze
+// var msize; //the length of one side of the square maze
 var mrows, mcolumns;
 var rwall, cwtag;
 var nwalls = 0;
@@ -100,6 +100,8 @@ function next() {
 }
 
 function convert() {
+    newmaze();
+    generate();
     var maze = new Array();
     for (const wall in walls) {
         const index = parseInt(wall.split(',')[0], 10);
@@ -126,12 +128,14 @@ function convert() {
             }
         }
     }
-    console.log(maze.length);
-    console.log(maze);
-    console.log(maze[16]);
+    // console.log(maze.length);
+    // console.log(maze);
+    // console.log(maze[16]);
 }
 
-newmaze();
-generate();
+exports.getConvert = convert;
+
+// newmaze();
+// generate();
 // console.log(walls);
 convert();
