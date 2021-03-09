@@ -131,6 +131,7 @@ function convert() {
     // console.log(maze.length);
     // console.log(maze);
     // console.log(maze[16]);
+    return maze;
 }
 
 exports.getConvert = convert;
