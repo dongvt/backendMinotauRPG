@@ -6,35 +6,38 @@ var walls = {};
 var backup;
 
 var msize; //the length of one side of the square maze
+var mrows, mcolumns;
 var rwall, cwtag;
 var nwalls = 0;
 var potentialWalls = [];
 
 function newmaze() {
-    msize = 10 //How big is the grid? Currently Square
+    //msize = 10; //How big is the grid? Currently Square
+    mrows = 10;
+    mcolumns = 10;
     cells = {};
     walls = {};
     potentialWalls = [];
 
     //build cell objects
-    for (var r = 0; r < msize; r++) {
-        for (var c = 0; c < msize; c++) {
-            var ct = ""+ (r*msize+c);
+    for (var r = 0; r < mrows; r++) {
+        for (var c = 0; c < mcolumns; c++) {
+            var ct = ""+ (r*mrows+c);
 
             cells[ct] = { row: r, col: c, visited: false, setindex: Number(ct) }
 
             //wall above
             if (r > 0) {
                 nwalls++;
-                var ntag = (r-1) * msize + c;
-                walltag = ntag + ',' + (r*msize+c);
+                var ntag = (r-1) * mrows + c;
+                walltag = ntag + ',' + (r*mrows+c);
                 potentialWalls.push(walltag);
                 walls[walltag] = [ true, 'h'];
             }
             if (c > 0) {
                 nwalls++;
-                var ntag = r*msize + c-1;
-                walltag = ntag + ',' + (r*msize+c);
+                var ntag = r*mrows + c-1;
+                walltag = ntag + ',' + (r*mrows+c);
                 potentialWalls.push(walltag);
                 walls[walltag] = [ true, 'v'];
             }
@@ -46,9 +49,9 @@ function newmaze() {
 function generate() {
     var finish = true;
 
-    for (var r = 0; r < msize; r++) {
-        for (var c = 0; c < msize; c++) {
-            if (cells['' + (r*msize+c)].visited == false ) {
+    for (var r = 0; r < mrows; r++) {
+        for (var c = 0; c < mcolumns; c++) {
+            if (cells['' + (r*mrows+c)].visited == false ) {
                 finish = false;
                 break;
             }
@@ -96,6 +99,39 @@ function next() {
     rwall = potentialWalls[ Math.floor( potentialWalls.length * Math.random() ) ];
 }
 
+function convert() {
+    var maze = new Array();
+    for (const wall in walls) {
+        const index = parseInt(wall.split(',')[0], 10);
+        if (walls[wall][1] == "v") {
+            if (maze[index] == undefined) {
+                maze[index] = { vertical: walls[wall][0] };
+            }
+            else { //maze[index] is already defined
+                maze[index] = {
+                    vertical: walls[wall][0],
+                    horizontal: maze[index].horizontal,
+                };
+            }
+        }
+        else if (walls[wall][1] == 'h') {
+            if (maze[index] != undefined ) { //this will happen more often
+                maze[index] = {
+                    vertical: maze[index].vertical,
+                    horizontal: walls[wall][0],
+                };
+            }
+            else { //maze[index] is not already defined (edge is on the very right)
+                maze[index] = { horizontal: walls[wall][0] };
+            }
+        }
+    }
+    console.log(maze.length);
+    console.log(maze);
+    console.log(maze[16]);
+}
+
 newmaze();
 generate();
-console.log(walls);
+// console.log(walls);
+convert();
