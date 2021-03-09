@@ -11,10 +11,10 @@ var rwall, cwtag;
 var nwalls = 0;
 var potentialWalls = [];
 
-function newmaze() {
+function newmaze(row, col) {
     //msize = 10; //How big is the grid? Currently Square
-    mrows = 10;
-    mcolumns = 10;
+    mrows = row;
+    mcolumns = col;
     cells = {};
     walls = {};
     potentialWalls = [];
@@ -99,8 +99,8 @@ function next() {
     rwall = potentialWalls[ Math.floor( potentialWalls.length * Math.random() ) ];
 }
 
-function convert() {
-    newmaze();
+function convert(row, col) {
+    newmaze(row, col);
     generate();
     var maze = new Array();
     for (const wall in walls) {
@@ -139,4 +139,4 @@ exports.getConvert = convert;
 // newmaze();
 // generate();
 // console.log(walls);
-convert();
+convert(10, 10);
