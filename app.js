@@ -10,6 +10,7 @@ const dotenv = require('dotenv').config();
 //Routes and controllers
 const errorController = require('./controllers/error');
 const authRoutes = require('./routes/auth');
+const gameRoutes = require('./routes/game');
 
 //Constant variables
 const MONGODB_URL = process.env.MONGODB_URL || process.env.MONGODB_LOCAL;
@@ -38,6 +39,7 @@ app.use((req,res,next) => {
 });
 
 app.use(authRoutes);
+app.use(gameRoutes);
 
 app.use(errorController.get404);
 

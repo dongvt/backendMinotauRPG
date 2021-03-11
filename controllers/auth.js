@@ -8,7 +8,7 @@ exports.postSignIn = (req,res,next) => {
     const email = req.body.email;
     const pass = req.body.password;
 
-    
+    console.log(req.body)
 
     User.findOne({email: email})
         .then(user => {

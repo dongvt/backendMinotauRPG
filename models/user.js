@@ -16,17 +16,14 @@ const userSchema = new Schema({
         required: true
     },
     resetToken: String,
-    resetTokenExpiration: Date
-    /* Add game object here in user
-    game: {
-        items: [
-            {
-                productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
-                quantity: { type: Number, required: true }
-            }
-        ]
-    }
-    */
+    resetTokenExpiration: Date,
+    games: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Game',
+            require: true
+        }
+    ]
 });
 
 module.exports = mongoose.model('User', userSchema);
