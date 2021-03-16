@@ -36,3 +36,8 @@ exports.patchNewGame = (req,res,next) => {
         res.json({status: 500, message:'Something went wrong saving the game'} );
     })
 }
+
+exports.outLoadGame = (req,res,next) =>{
+    const gameId = req.body.gameId;
+    //all the other code
+}

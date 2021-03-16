@@ -11,5 +11,6 @@ const gameController = require('../controllers/game');
 const router = express.Router();
 
 router.patch('/newGame',gameController.patchNewGame);
+router.put('/loadGame',gameController.putLoadGame);
 
 module.exports = router;
