@@ -12,5 +12,5 @@ const router = express.Router();
 
 router.patch('/newGame',gameController.patchNewGame);
 router.put('/loadGame',gameController.putLoadGame);
-
+router.post('/saveGame', gameController.postSaveGame);
 module.exports = router;
