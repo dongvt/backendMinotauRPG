@@ -126,4 +126,18 @@ exports.patchNewGame = (req,res,next) => {
         res.json({status: 500, message:'Something went wrong saving the game'} );
     })
 }
-*/
+
+exports.putLoadGame = (req,res,next) =>{
+    const gameId = req.body.gameId;
+    Game.findById(gameId).then(game => {
+        res.json(game);
+    }).catch(err => {
+        console.log(err);
+        res.json({status: 500, message:'Something went wrong loading the game'} );
+    });
+}
+
+exports.postSaveGame = (req, res, next) => {
+    const game = req.body.game;
+    // all other code
+}*/
