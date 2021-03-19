@@ -7,14 +7,26 @@ const gameSchema = new Schema({
         type: Object,
         require: true
     }],
-    userIndex: {
+    playerHealth: {
         type: Number,
         require: true
     },
+    playerExperience: {
+        type: Number,
+        require: true
+    },
+    playerPosition: [{
+        type: Object,
+        require: true
+    }],
     enemyList: [{
         type: Object,
         require: true
-    }]
+    }],
+    itemList: [{
+        type: Object,
+        require: true
+    }],
 });
 
 module.exports = mongoose.model('Game', gameSchema);

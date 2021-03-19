@@ -12,11 +12,16 @@ exports.patchNewGame = (req, res, next) => {
     const x = req.body.h;
     const y = req.body.w;
     const maze = new Maze(x, y);
+    const canvasH = req.body.cH;
+    const canvasW = req.body.cW;
 
     const game = new Game({
         maze: maze.convert(),
-        userIndex: 11, //To change, would be a random number from 0 to matrix.lengh - 1
-        enemyList: [] //I asume is a list of numbers with the indexes of the position of each enemy
+        enemyList: populateEnemyList(canvasW, canvasH), //I asume is a list of numbers with the indexes of the position of each enemy
+        playerHealth: 100,
+        playerExperience: 0,
+        playerPosition: playerPosition(canvasW, canvasH),
+        itemList: [], //We might want to have a default item
     });
     res.json(game);
 };
@@ -94,50 +99,26 @@ exports.postSaveGame = (req, res, next) => {
 
 }
 
-/* Old patchNewGame
-exports.patchNewGame = (req,res,next) => {
-    const x = req.body.h;
-    const y = req.body.w;
-    const userId = req.body.userId;
-    const maze = new Maze(x,y);
-
-    let newGame;
-    const game = new Game({
-        maze: maze.convert(),
-        userIndex: 11, //To change, would be a random number from 0 to matrix.lengh - 1
-        enemyList: [] //I asume is a list of numbers with the indexes of the position of each enemy
-    });
-
-    game.save() // game should NOT be saving
-    .then(result => {
-        newGame = result;
-        return User.findById(userId)
-    })
-    .then(user => {
-        if (!user.games)
-            user.games = [];
-
-        user.games.push(newGame); // get rid of this
-        user.save(); // get rid of this
-        res.json(newGame);
-    })
-    .catch(err => {
-        console.log(err)
-        res.json({status: 500, message:'Something went wrong saving the game'} );
-    })
+function populateEnemyList(canvasW, canvasH) {
+    let w = canvasW;
+    let h = canvasH;
+    let numMonsters = 3; //hardcoded for now
+    let enemyList = new Array();
+    for (let i = 0; i < numMonsters; i++)
+    {
+        let x = Math.random(0,w);
+        let y = Math.random(0,h);
+        enemyList.push({
+            x: x,
+            y: y,
+        });
+    }
+    return enemyList;
 }
 
-exports.putLoadGame = (req,res,next) =>{
-    const gameId = req.body.gameId;
-    Game.findById(gameId).then(game => {
-        res.json(game);
-    }).catch(err => {
-        console.log(err);
-        res.json({status: 500, message:'Something went wrong loading the game'} );
-    });
+function playerPosition(canvasW, canvasH) {
+    return {
+        x: Math.random(0, canvasW),
+        y: Math.random(0, canvasH)
+    };
 }
-
-exports.postSaveGame = (req, res, next) => {
-    const game = req.body.game;
-    // all other code
-}*/
