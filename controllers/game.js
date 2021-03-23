@@ -5,16 +5,17 @@ const Maze = require('../controllers/maze');
 const User = require('../models/user');
 const Game = require('../models/game');
 
-// Mongoose
-const mongoose = require('mongoose');
-
-exports.patchNewGame = (req, res, next) => {
+exports.postNewGame = (req, res, next) => {
+    // JSON body parameters
     const x = req.body.h;
     const y = req.body.w;
-    const maze = new Maze(x, y);
     const canvasH = req.body.cH;
     const canvasW = req.body.cW;
 
+    //Maze object
+    const maze = new Maze(x, y);
+
+    //Game object
     const game = new Game({
         maze: maze.convert(),
         enemyList: populateEnemyList(canvasW, canvasH), //I asume is a list of numbers with the indexes of the position of each enemy
@@ -23,12 +24,14 @@ exports.patchNewGame = (req, res, next) => {
         playerPosition: playerPosition(canvasW, canvasH),
         itemList: [], //We might want to have a default item
     });
+
+    //JSON response (without saving the game)
     res.json(game);
 };
 
-exports.putLoadGame = (req, res, next) => {
+exports.postLoadGame = (req, res, next) => {
     const gameId = req.body.gameId;
-    console.log('gameId: ' + gameId);
+    console.log(gameId);
     Game.findById(gameId).then(maze => {
         res.json(maze);
     }).catch(err => {
@@ -38,36 +41,20 @@ exports.putLoadGame = (req, res, next) => {
 }
 
 exports.postSaveGame = (req, res, next) => {
-    const maze = req.body.maze;
-    const enemyList = req.body.enemyList;
-    const id = req.body._id;
-    const userIndex = req.body.userIndex;
-    const userId = req.body.playerId;
+    const game = req.body.game;
+    const userId = req.body.userId;
 
-
-    Game.countDocuments({ _id: id }, function (err, count) {
+    Game.countDocuments({ _id: game._id }, (err, count) => {
         if (count > 0) { // game exists so update game
-            console.log(id);
-            Game.findByIdAndUpdate(
-                id,
-                {
-                    maze: maze,
-                    userIndex: userIndex,
-                    enemyList: enemyList
-                }
-            ).then(result => {
+            Game.findByIdAndUpdate(game)
+            .then(result => {
                 res.json({ status: 200, message: 'Game saved' });
             }).catch(err => {
                 console.log(err);
                 res.json({ status: 500, message: 'Something went wrong saving the game' });
             })
         } else { // save game as new game
-            const game = new Game({
-                maze: maze,
-                userIndex: userIndex,
-                enemyList: enemyList,
-                _id: id
-            });
+            const game = new Game(game);
             game.save()
                 .then(result => {
                     newGame = result;

@@ -10,7 +10,7 @@ const gameController = require('../controllers/game');
 
 const router = express.Router();
 
-router.patch('/newGame',gameController.patchNewGame);
-router.put('/loadGame',gameController.putLoadGame);
-router.post('/saveGame', gameController.postSaveGame);
+router.post('/newGame',gameController.postNewGame);
+router.post('/loadGame',gameController.postLoadGame);
+router.patch('/saveGame', gameController.postSaveGame);
 module.exports = router;
