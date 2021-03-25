@@ -23,7 +23,7 @@ exports.postSignIn = (req,res,next) => {
             bcrypt.compare(pass, user.password)
             .then(matched => {
                 if (matched) {
-                    const token = jwt.sign({id: user._id.toString(), email: email}, 'this_is_a_secret_string', {expiresIn: '1h'});
+                    const token = jwt.sign({id: user._id.toString(), email: email}, process.env.JWT_SECRET, {expiresIn: '1h'});
                     return res.json({
                         status: 200,
                         message: '',
