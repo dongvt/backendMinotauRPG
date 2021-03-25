@@ -1,6 +1,7 @@
 
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const { validationResult } = require('express-validator/check');
 
@@ -22,10 +23,12 @@ exports.postSignIn = (req,res,next) => {
             bcrypt.compare(pass, user.password)
             .then(matched => {
                 if (matched) {
+                    const token = jwt.sign({id: user._id.toString(), email: email}, 'this_is_a_secret_string', {expiresIn: '1h'});
                     return res.json({
                         status: 200,
                         message: '',
-                        user: user
+                        user: user,
+                        token: token
                     });
                 }
                 return res.json({
