@@ -81,9 +81,6 @@ exports.postSaveGame = (req, res, next) => {
     }).catch(err => {
         res.json({ status: 500, message: 'Something went wrong saving the game' });
     })
-
-
-
 }
 
 function populateEnemyList(canvasW, canvasH) {

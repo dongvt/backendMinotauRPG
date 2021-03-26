@@ -9,7 +9,7 @@ exports.postSignIn = (req,res,next) => {
     const email = req.body.email;
     const pass = req.body.password;
 
-    console.log(req.body)
+    console.log(req.body);
 
     User.findOne({email: email})
         .then(user => {
@@ -28,7 +28,7 @@ exports.postSignIn = (req,res,next) => {
                         status: 200,
                         message: '',
                         user: user,
-                        token: token
+                        token: "token"
                     });
                 }
                 return res.json({
