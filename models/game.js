@@ -7,26 +7,35 @@ const gameSchema = new Schema({
         type: Object,
         require: true
     }],
-    playerHealth: {
-        type: Number,
+    ineventory: [{
+        type: Object,
         require: true
-    },
+    }],
     playerExperience: {
         type: Number,
         require: true
     },
-    playerPosition: [{
+    playerLevel: {
+        type: Number,
+        require: true
+    },
+    playerPosition: {
         type: Object,
         require: true
-    }],
+    },
+    playerHealth: {
+        type: Number,
+        require: true
+    },
+    playerMaxHealth: {
+        type: Number,
+        require: true
+    },
     enemyList: [{
         type: Object,
         require: true
     }],
-    itemList: [{
-        type: Object,
-        require: true
-    }],
+    
 });
 
 module.exports = mongoose.model('Game', gameSchema);

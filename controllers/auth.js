@@ -24,11 +24,12 @@ exports.postSignIn = (req,res,next) => {
             .then(matched => {
                 if (matched) {
                     const token = jwt.sign({id: user._id.toString(), email: email}, process.env.JWT_SECRET, {expiresIn: '1h'});
+                    user.password = '';
                     return res.json({
                         status: 200,
                         message: '',
                         user: user,
-                        token: "token"
+                        token: token
                     });
                 }
                 return res.json({

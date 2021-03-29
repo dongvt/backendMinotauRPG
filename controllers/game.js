@@ -5,6 +5,13 @@ const Maze = require('../controllers/maze');
 const User = require('../models/user');
 const Game = require('../models/game');
 
+//Constant values
+
+const MAX_HEALTH = 200;
+const PLAYER_EXPERIENCE = 0;
+const PLAYER_LEVEL = 0;
+const ENEMIES = 3;
+
 exports.postNewGame = (req, res, next) => {
     // JSON body parameters
     const x = req.body.h;
@@ -18,11 +25,13 @@ exports.postNewGame = (req, res, next) => {
     //Game object
     const game = new Game({
         maze: maze.convert(),
-        enemyList: populateEnemyList(canvasW, canvasH), //I asume is a list of numbers with the indexes of the position of each enemy
-        playerHealth: 100,
-        playerExperience: 0,
+        inventory: [],
+        playerExperience: PLAYER_EXPERIENCE,
+        playerLevel: PLAYER_LEVEL,
         playerPosition: playerPosition(canvasW, canvasH),
-        itemList: [], //We might want to have a default item
+        playerHealth: MAX_HEALTH,
+        playerMaxHealth: MAX_HEALTH,
+        enemyList: populateEnemyList(canvasW, canvasH)
     });
 
     //JSON response (without saving the game)
@@ -67,7 +76,7 @@ exports.postSaveGame = (req, res, next) => {
 
                     user.games.push(newGame);
                     user.save();
-                    res.json({ status: 200, message: 'Game saved' });
+                    res.json({ status: 200, message: 'Game saved', id: newGame._id });
                 })
                 .catch(err => {
                     console.log(err)
@@ -86,7 +95,7 @@ exports.postSaveGame = (req, res, next) => {
 function populateEnemyList(canvasW, canvasH) {
     let w = canvasW;
     let h = canvasH;
-    let numMonsters = 3; //hardcoded for now
+    let numMonsters = ENEMIES; 
     let enemyList = new Array();
     for (let i = 0; i < numMonsters; i++)
     {

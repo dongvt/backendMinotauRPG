@@ -26,8 +26,6 @@ const mongooseOptions = {
 
 const app = express();
 
-
-
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -52,5 +50,5 @@ mongoose
     })
     .catch(err => console.log(err));
 
-//The MongoDB Warning (Warning: Accessing non-existent property 'MongoError' of module exports inside circular dependency) is a mongoose error, not syntax error:
+//The MongoDB Warning (Warning: Accessing non-existent property 'MongoError' of module exports inside circular dependency) is a mongoose error:
 //https://developer.mongodb.com/community/forums/t/warning-accessing-non-existent-property-mongoerror-of-module-exports-inside-circular-dependency/15411
