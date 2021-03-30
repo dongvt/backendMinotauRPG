@@ -111,7 +111,9 @@ exports.postSaveGame = (req, res, next) => {
                 .catch(err => {
                     console.log(err)
                     if (!userId) {
-                        res.json({ status: 500, message: 'playerId field is missing' });
+                        res.json({ status: 422, message: 'playerId field missing in request body' });
+                    } else if (!gameObj) {
+                        res.json({ status: 422, message: 'game field missing in request body' });
                     } else {
                         res.json({ status: 500, message: err });
                     }
