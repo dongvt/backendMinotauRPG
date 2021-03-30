@@ -89,7 +89,7 @@ exports.postSaveGame = (req, res, next) => {
             })
             .catch(err => {
                 console.log(err);
-                res.json({ status: 500, message: 'Something went wrong saving the game' });
+                res.json({ status: 500, message: err });
             })
         } else { // save game as new game
             const game = new Game(gameObj);
@@ -113,12 +113,12 @@ exports.postSaveGame = (req, res, next) => {
                     if (!userId) {
                         res.json({ status: 500, message: 'playerId field is missing' });
                     } else {
-                        res.json({ status: 500, message: 'Something went wrong saving the game' });
+                        res.json({ status: 500, message: err });
                     }
                 });
         }
     }).catch(err => {
-        res.json({ status: 500, message: 'Something went wrong saving the game' });
+        res.json({ status: 500, message: err });
     })
 }
 
