@@ -31,11 +31,11 @@ exports.deleteGame = (req, res, next) => {
         console.log(err)
         if (!gameId) {
             res.json({ status: 422, message: 'gameId missing in request body.' });
-        }
-        if (!userId) {
+        } else if (!userId) {
             res.json({ status: 422, message: 'userId missing in request body.' });
+        } else {
+            res.json({ status: 500, message: 'Something went wrong deleting the game' });
         }
-        res.json({ status: 500, message: 'Something went wrong deleting the game' });
     })
 }
 exports.postNewGame = (req, res, next) => {
@@ -72,8 +72,9 @@ exports.postLoadGame = (req, res, next) => {
         console.log(err);
         if (!gameId) {
             res.json({ status: 422, message: 'gameId missing in request body.' });
+        } else {
+            res.json({ status: 500, message: 'Something went wrong loading the game' });
         }
-        res.json({ status: 500, message: 'Something went wrong loading the game' });
     });
 }
 
