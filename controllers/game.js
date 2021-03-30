@@ -66,11 +66,13 @@ exports.postNewGame = (req, res, next) => {
 
 exports.postLoadGame = (req, res, next) => {
     const gameId = req.body.gameId;
-    console.log(gameId);
     Game.findById(gameId).then(maze => {
         res.json(maze);
     }).catch(err => {
         console.log(err);
+        if (!gameId) {
+            res.json({ status: 422, message: 'gameId missing in request body.' });
+        }
         res.json({ status: 500, message: 'Something went wrong loading the game' });
     });
 }
