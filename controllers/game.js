@@ -26,10 +26,15 @@ exports.deleteGame = (req, res, next) => {
     .then(response => {
         Game.findByIdAndDelete(gameId);
         res.json({ status: 200, message: 'Game deleted' });
-
     })
     .catch(err => {
         console.log(err)
+        if (!gameId) {
+            res.json({ status: 422, message: 'gameId missing in request body.' });
+        }
+        if (!userId) {
+            res.json({ status: 422, message: 'userId missing in request body.' });
+        }
         res.json({ status: 500, message: 'Something went wrong deleting the game' });
     })
 }
