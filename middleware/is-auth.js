@@ -25,20 +25,3 @@ module.exports = (req, res, next) => {
     req.userId = decodedToken.id;
     next();
 }
-
-// NOTES
-
-// requires front end fetches to have headers 
-// headers: {
-//   Authorization: 'Bearer ' + this.props.token
-// }
-
-
-// Add to backend by importing
-// const isAuth = require('../middleware/is-auth')
-//
-// then add to middleware in routes folder
-//
-//
-//
-//

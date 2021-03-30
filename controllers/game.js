@@ -12,6 +12,27 @@ const PLAYER_EXPERIENCE = 0;
 const PLAYER_LEVEL = 0;
 const ENEMIES = 3;
 
+
+exports.deleteGame = (req, res, next) => {
+    const gameId = req.body.gameId;
+    const userId = req.body.userId;
+
+    User.findById(userId)
+    .then(user => {
+        const gameIndex = user.games.findIndex(item => gameId);
+        user.games.splice(gameIndex,1);
+        return user.save();
+    })
+    .then(response => {
+        Game.findByIdAndDelete(gameId);
+        res.json({ status: 200, message: 'Game deleted' });
+
+    })
+    .catch(err => {
+        console.log(err)
+        res.json({ status: 500, message: 'Something went wrong deleting the game' });
+    })
+}
 exports.postNewGame = (req, res, next) => {
     // JSON body parameters
     const x = req.body.h;
@@ -50,20 +71,24 @@ exports.postLoadGame = (req, res, next) => {
 }
 
 exports.postSaveGame = (req, res, next) => {
-    const game = req.body.game;
+    const gameObj = req.body.game;
     const userId = req.body.userId;
 
-    Game.countDocuments({ _id: game._id }, (err, count) => {
+    const gameId = gameObj._id || "";
+
+    Game.countDocuments({ _id: gameId }, (err, count) => {
         if (count > 0) { // game exists so update game
-            Game.findByIdAndUpdate(game)
+            Game.findByIdAndUpdate(gameId,gameObj) 
             .then(result => {
-                res.json({ status: 200, message: 'Game saved' });
-            }).catch(err => {
+                res.json({ status: 200, message: 'Game saved', id: result._id });
+            })
+            .catch(err => {
                 console.log(err);
                 res.json({ status: 500, message: 'Something went wrong saving the game' });
             })
         } else { // save game as new game
-            const game = new Game(game);
+            const game = new Game(gameObj);
+            let newGame;
             game.save()
                 .then(result => {
                     newGame = result;
@@ -99,8 +124,8 @@ function populateEnemyList(canvasW, canvasH) {
     let enemyList = new Array();
     for (let i = 0; i < numMonsters; i++)
     {
-        let x = Math.random(0,w);
-        let y = Math.random(0,h);
+        let x = Math.floor(Math.random() * w);
+        let y = Math.floor(Math.random() * h);
         enemyList.push({
             x: x,
             y: y,
@@ -111,7 +136,7 @@ function populateEnemyList(canvasW, canvasH) {
 
 function playerPosition(canvasW, canvasH) {
     return {
-        x: Math.random(0, canvasW),
-        y: Math.random(0, canvasH)
+        x: Math.floor(Math.random() * canvasW),
+        y: Math.floor(Math.random() * canvasH)
     };
 }
