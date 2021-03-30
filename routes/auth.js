@@ -10,7 +10,7 @@ const router = express.Router();
     
 const authController = require('../controllers/auth');
 
-router.post('/signin', authController.postSignIn);
+router.post('/signin',check('email').isEmail().withMessage('Invalid Email') , authController.postSignIn);
 
 router.post('/signup',
     check('email')
