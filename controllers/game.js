@@ -92,7 +92,7 @@ exports.postSaveGame = (req, res, next) => {
             })
             .catch(err => {
                 console.log(err);
-                res.json({ status: 500, message: err });
+                res.json({ status: 500, message: 'Error saving the game' });
             })
         } else { // save game as new game
             const game = new Game(gameObj);
@@ -118,12 +118,12 @@ exports.postSaveGame = (req, res, next) => {
                     } else if (!gameObj) {
                         res.json({ status: 422, message: 'game field missing in request body' });
                     } else {
-                        res.json({ status: 500, message: err });
+                        res.json({ status: 500, message: 'Error saving the game' });
                     }
                 });
         }
     }).catch(err => {
-        res.json({ status: 500, message: err });
+        res.json({ status: 500, message: 'Error saving the game' });
     })
 }
 
