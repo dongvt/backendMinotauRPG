@@ -14,10 +14,9 @@ exports.postSignIn = (req,res,next) => {
     User.findOne({email: email})
         .then(user => {
             if(!user) {
-                return res.json({
-                    status: 400,
-                    message: 'Invalid password or email*'
-                });
+                const error = new Error('Invalid password or email');
+                error.statusCode = 403;
+                return next(error);
             }
 
             bcrypt.compare(pass, user.password)
@@ -25,24 +24,22 @@ exports.postSignIn = (req,res,next) => {
                 if (matched) {
                     const token = jwt.sign({id: user._id.toString(), email: email}, process.env.JWT_SECRET, {expiresIn: '1h'});
                     user.password = '';
-                    return res.json({
-                        status: 200,
+                    return res.status(200).json({
                         message: '',
                         user: user,
                         token: token
                     });
                 }
-                return res.json({
-                    status: 400,
-                    message: 'Invalid password or email',
-                });
+                const error = new Error('Invalid password or email')
+                error.statusCode = 403;
+                return next(error);
             });
         })
         .catch (err => {
-            res.json({
-                status: 400,
-                message: err,
-            });
+            err.statusCode = 403;
+            err.message = 'User not found';
+            return next(err);
+            
         })
 }
 
@@ -55,17 +52,15 @@ exports.postSignUp = (req,res,next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        return res.json({
-            status: 422,
-            message: errors.array()[0].msg
-        });
+        const error = new Error(errors.array()[0].msg);
+        error.statusCode = 422;
+        return next(error);
     }
 
     if (pass !== confPass) {
-        return res.json({
-            status: 400,
-            message: 'Passwords does not match',
-        });
+        const error = new Error('Passwords do not match');
+        error.statusCode = 400;
+        return next(error);
     }
 
     bcrypt.hash(pass,12)
@@ -78,16 +73,14 @@ exports.postSignUp = (req,res,next) => {
             return newUser.save();
         })
         .then(result => {
-            res.json({
-                status: 200,
+            res.status(200).json({
                 message: 'User Created',
             });
         }) 
         .catch(err => {
-            res.json({
-                status: 403,
-                message: err,
-            });
+            err.statusCode = 403;
+            err.message = 'Error saving password';
+            return next(err);
         })
 
     

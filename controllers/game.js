@@ -25,17 +25,21 @@ exports.deleteGame = (req, res, next) => {
     })
     .then(response => {
         Game.findByIdAndDelete(gameId);
-        res.json({ status: 200, message: 'Game deleted' });
+        res.status(200).json({ message: 'Game deleted' });
     })
     .catch(err => {
         console.log(err)
         if (!gameId) {
-            res.json({ status: 422, message: 'gameId missing in request body.' });
+            err.statusCode = 422;
+            err.message = 'gameId missing in request body.';
         } else if (!userId) {
-            res.json({ status: 422, message: 'userId missing in request body.' });
+            err.statusCode = 422;
+            err.message = 'userId missing in request body.';
         } else {
-            res.json({ status: 500, message: 'Something went wrong deleting the game' });
+            err.statusCode = 500;
+            err.message = 'Something went wrong deleting the game';
         }
+        return next(err);
     })
 }
 exports.postNewGame = (req, res, next) => {
@@ -71,10 +75,13 @@ exports.postLoadGame = (req, res, next) => {
     }).catch(err => {
         console.log(err);
         if (!gameId) {
-            res.json({ status: 422, message: 'gameId missing in request body.' });
+            err.statusCode = 422;
+            err.message = 'gameId missing in request body.';
         } else {
-            res.json({ status: 500, message: 'Something went wrong loading the game' });
+            err.statusCode = 500;
+            err.message = 'Something went wrong loading the game';
         }
+        return next(err);
     });
 }
 
@@ -88,11 +95,12 @@ exports.postSaveGame = (req, res, next) => {
         if (count > 0) { // game exists so update game
             Game.findByIdAndUpdate(gameId,gameObj) 
             .then(result => {
-                res.json({ status: 200, message: 'Game saved', id: result._id });
+                res.status(200).json({ message: 'Game saved', id: result._id });
             })
             .catch(err => {
-                console.log(err);
-                res.json({ status: 500, message: 'Error saving the game' });
+                err.statusCode = 500;
+                err.message = 'Error saving the game';
+                return next(err);
             })
         } else { // save game as new game
             const game = new Game(gameObj);
@@ -109,21 +117,28 @@ exports.postSaveGame = (req, res, next) => {
 
                     user.games.push(newGame);
                     user.save();
-                    res.json({ status: 200, message: 'Game saved', id: newGame._id });
+                    res.status(200).json({ message: 'Game saved', id: newGame._id });
                 })
                 .catch(err => {
-                    console.log(err)
+                    
                     if (!userId) {
-                        res.json({ status: 422, message: 'playerId field missing in request body' });
+                        err.statusCode = 422;
+                        err.message = 'playerId field missing in request body';
                     } else if (!gameObj) {
-                        res.json({ status: 422, message: 'game field missing in request body' });
+                        err.statusCode = 422;
+                        err.message = 'game field missing in request body';
                     } else {
-                        res.json({ status: 500, message: 'Error saving the game' });
+                        err.statusCode = 500;
+                        err.message = 'Error saving the gamw';
                     }
+
+                    return next(err);
                 });
         }
     }).catch(err => {
-        res.json({ status: 500, message: 'Error saving the game' });
+        err.statusCode = 500;
+        err.message = 'Error saving the game';
+        return next(err);
     })
 }
 

@@ -14,6 +14,7 @@ module.exports = (req, res, next) => {
     try {
         decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
+        err.message = 'Token error';
         err.statusCode = 500;
         throw err;
     }
