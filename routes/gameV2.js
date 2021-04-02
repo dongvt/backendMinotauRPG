@@ -7,11 +7,11 @@ const gameController = require('../controllers/gameV2');
 
 const router = express.Router();
 
-router.post('/newGameV2',gameController.postNewGame);
+router.post('/newGameV2', gameController.postNewGame);
 
-router.post('/loadGameV2',gameController.postLoadGame);
+router.post('/loadGameV2',isAuth, gameController.postLoadGame);
 
-router.patch('/saveGameV2', gameController.postSaveGame);
+router.patch('/saveGameV2',isAuth, gameController.postSaveGame);
 
-router.delete('/deleteGameV2',gameController.deleteGame);
+router.delete('/deleteGameV2',isAuth, gameController.deleteGame);
 module.exports = router;
