@@ -11,6 +11,7 @@ const dotenv = require('dotenv').config();
 const errorController = require('./controllers/error');
 const authRoutes = require('./routes/auth');
 const gameRoutes = require('./routes/game');
+const gameRoutesV2 = require('./routes/gameV2');
 
 //Constant variables
 const MONGODB_URL = process.env.MONGODB_URL || process.env.MONGODB_LOCAL;
@@ -38,6 +39,7 @@ app.use((req,res,next) => {
 
 app.use(authRoutes);
 app.use(gameRoutes);
+app.use(gameRoutesV2);
 
 app.get('/500',errorController.get500);
 app.use(errorController.get404);
