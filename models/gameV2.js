@@ -15,11 +15,11 @@ const newGameSchema = new Schema({
         require: true
     },
     rooms: [{
-        mazeLocationX: {
+        roomLocationX: {
             type: Number,
             require: true
         },
-        mazeLocationY: {
+        roomLocationY: {
             type: Number,
             require: true
         },
