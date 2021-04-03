@@ -12,7 +12,7 @@ const PLAYER_EXPERIENCE = 0;
 const PLAYER_LEVEL = 0;
 const ENEMIES = 3;
 
-// TODO
+// V1
 exports.deleteGame = (req, res, next) => {
     const gameId = req.body.gameId;
     const userId = req.body.userId;
@@ -90,6 +90,29 @@ exports.postLoadGame = (req, res, next) => {
         } else {
             err.statusCode = 500;
             err.message = 'Something went wrong loading the game';
+        }
+        return next(err);
+    });
+};
+
+// returns player level and experience
+exports.postLoadGameData = (req, res, next) => {
+    const gameId = req.body.gameId;
+    Game.findById(gameId).then(data => {
+        const playerLevel = data.playerLevel;
+        const playerExperience = data.playerExperience;
+        res.json({
+            playerLevel,
+            playerExperience
+        });
+    }).catch(err => {
+        console.log(err);
+        if (!gameId) {
+            err.statusCode = 422;
+            err.message = 'gameId missing in request body.';
+        } else {
+            err.statusCode = 500;
+            err.message = 'Something went wrong loading the game data';
         }
         return next(err);
     });

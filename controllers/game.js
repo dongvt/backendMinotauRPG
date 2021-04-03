@@ -83,7 +83,30 @@ exports.postLoadGame = (req, res, next) => {
         }
         return next(err);
     });
-}
+};
+
+// returns player level and experience
+exports.postLoadGameData = (req, res, next) => {
+    const gameId = req.body.gameId;
+    Game.findById(gameId).then(data => {
+        const playerLevel = data.playerLevel;
+        const playerExperience = data.playerExperience;
+        res.json({
+            playerLevel,
+            playerExperience
+        });
+    }).catch(err => {
+        console.log(err);
+        if (!gameId) {
+            err.statusCode = 422;
+            err.message = 'gameId missing in request body.';
+        } else {
+            err.statusCode = 500;
+            err.message = 'Something went wrong loading the game data';
+        }
+        return next(err);
+    });
+};
 
 exports.postSaveGame = (req, res, next) => {
     const gameObj = req.body.game;
