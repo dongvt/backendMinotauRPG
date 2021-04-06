@@ -32,7 +32,7 @@ const newGameSchema = new Schema({
             require: true
         }]
     }],  
-    ineventory: [{
+    inventory: [{
         type: Object,
         require: true
     }],

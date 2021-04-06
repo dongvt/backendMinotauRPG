@@ -7,7 +7,7 @@ const gameSchema = new Schema({
         type: Object,
         require: true
     }],
-    ineventory: [{
+    inventory: [{
         type: Object,
         require: true
     }],
