@@ -174,7 +174,7 @@ function populateEnemyList(canvasW, canvasH) {
     {
         let x = Math.floor(Math.random() * w);
         let y = Math.floor(Math.random() * h);
-        enemyList.push({
+        enemyList.push(pos: {
             x: x,
             y: y,
         });
