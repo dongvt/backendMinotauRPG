@@ -18,29 +18,29 @@ exports.deleteGame = (req, res, next) => {
     const userId = req.body.userId;
 
     User.findById(userId)
-    .then(user => {
-        const gameIndex = user.games.findIndex(item => gameId);
-        user.games.splice(gameIndex,1);
-        return user.save();
-    })
-    .then(response => {
-        Game.findByIdAndDelete(gameId);
-        res.status(200).json({ message: 'Game deleted' });
-    })
-    .catch(err => {
-        console.log(err)
-        if (!gameId) {
-            err.statusCode = 422;
-            err.message = 'gameId missing in request body.';
-        } else if (!userId) {
-            err.statusCode = 422;
-            err.message = 'userId missing in request body.';
-        } else {
-            err.statusCode = 500;
-            err.message = 'Something went wrong deleting the game';
-        }
-        return next(err);
-    })
+        .then(user => {
+            const gameIndex = user.games.findIndex(item => gameId);
+            user.games.splice(gameIndex, 1);
+            return user.save();
+        })
+        .then(response => {
+            Game.findByIdAndDelete(gameId);
+            res.status(200).json({ message: 'Game deleted' });
+        })
+        .catch(err => {
+            console.log(err)
+            if (!gameId) {
+                err.statusCode = 422;
+                err.message = 'gameId missing in request body.';
+            } else if (!userId) {
+                err.statusCode = 422;
+                err.message = 'userId missing in request body.';
+            } else {
+                err.statusCode = 500;
+                err.message = 'Something went wrong deleting the game';
+            }
+            return next(err);
+        })
 }
 exports.postNewGame = (req, res, next) => {
     // JSON body parameters
@@ -116,15 +116,15 @@ exports.postSaveGame = (req, res, next) => {
 
     Game.countDocuments({ _id: gameId }, (err, count) => {
         if (count > 0) { // game exists so update game
-            Game.findByIdAndUpdate(gameId,gameObj) 
-            .then(result => {
-                res.status(200).json({ message: 'Game saved', id: result._id });
-            })
-            .catch(err => {
-                err.statusCode = 500;
-                err.message = 'Error saving the game';
-                return next(err);
-            })
+            Game.findByIdAndUpdate(gameId, gameObj)
+                .then(result => {
+                    res.status(200).json({ message: 'Game saved', id: result._id });
+                })
+                .catch(err => {
+                    err.statusCode = 500;
+                    err.message = 'Error saving the game';
+                    return next(err);
+                })
         } else { // save game as new game
             const game = new Game(gameObj);
             let newGame;
@@ -143,7 +143,7 @@ exports.postSaveGame = (req, res, next) => {
                     res.status(200).json({ message: 'Game saved', id: newGame._id });
                 })
                 .catch(err => {
-                    
+
                     if (!userId) {
                         err.statusCode = 422;
                         err.message = 'playerId field missing in request body';
@@ -168,15 +168,16 @@ exports.postSaveGame = (req, res, next) => {
 function populateEnemyList(canvasW, canvasH) {
     let w = canvasW;
     let h = canvasH;
-    let numMonsters = ENEMIES; 
+    let numMonsters = ENEMIES;
     let enemyList = new Array();
-    for (let i = 0; i < numMonsters; i++)
-    {
+    for (let i = 0; i < numMonsters; i++) {
         let x = Math.floor(Math.random() * w);
         let y = Math.floor(Math.random() * h);
-        enemyList.push(pos: {
-            x: x,
-            y: y,
+        enemyList.push({
+            pos: {
+                x: x,
+                y: y,
+            }
         });
     }
     return enemyList;
