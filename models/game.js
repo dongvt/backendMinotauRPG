@@ -34,7 +34,7 @@ const gameSchema = new Schema({
     enemyList: [{
         type: Object,
         require: true
-    }],
+    }]
     
 });
 
